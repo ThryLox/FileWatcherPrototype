@@ -13,7 +13,7 @@ public class Folder extends Observable {
       Folder(String dir){
 
        file  = new File(dir);
-
+       // getting original folder size
        long length = 0;
       for (File file : file.listFiles()) {
           if (file.isFile())
@@ -28,22 +28,22 @@ public class Folder extends Observable {
         return this.file;
       }
 
-      public long getSize() {
+      public long getSize() {       
         
-        
-        return this.size;}
+        return this.size;
+      }
 
-     
-     public void add(String a){   
+      // add a file to the folder being observed, the observer will be notified 
+
+     public void add(String a){ 
       
       
       try {
          File myObj = new File(a);
-         if (myObj.createNewFile()) {
-           
+         if (myObj.createNewFile()) {           
 
-        setChanged();  
-        notifyObservers("File" + a + "Added");
+        setChanged(); // setting the change before notifyng the observer  
+        notifyObservers("File "  + a + " Added");
        
          } else {
            System.out.println("File already exists.");
@@ -55,29 +55,31 @@ public class Folder extends Observable {
          e.printStackTrace();
        }       
         
-       this.folderSize(file);
+       this.folderSize(file); // checking the size after file addition so that a size change can be notified
 
      } 
-
-     public void delete(){   
-      
+ // delete teh first file in the folder 
+     public void delete(){    
       
 
        File f = file.listFiles()[0]; 
-  if (f.delete()) { 
-   setChanged();  
-      notifyObservers("File" + f + "Deleted");
+       if (f.delete()) { 
+        // set chaneg and notify
+       setChanged();  
+       notifyObservers("File " + f + " Deleted ");
 
      
-  } else {
-   System.out.println("Failed to delete the file.");
-  } 
-  this.folderSize(this.file); 
+      } else {
+       System.out.println("Failed to delete the file.");
+      } 
+      this.folderSize(this.file); 
 }        
         
    
      
   public void folderSize(File directory) {
+
+    // measure forlder size
       
       long length = 0;
       for (File file : directory.listFiles()) {
@@ -94,8 +96,10 @@ public class Folder extends Observable {
       
     
    }
+   // to test if the folder size change notification works I used this method to add text to a file
 
    public void copyContent(File sour,File dest) throws IOException {
+
     Files.copy(sour.toPath(), dest.toPath());
     folderSize(this.file);
 
